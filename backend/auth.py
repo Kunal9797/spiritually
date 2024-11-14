@@ -40,3 +40,5 @@ def verify_token(token: str = Depends(oauth2_scheme), db: Session = Depends(get_
     if user is None:
         raise credentials_exception
     return user
+
+get_current_user = verify_token

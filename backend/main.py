@@ -8,6 +8,8 @@ import os
 from dotenv import load_dotenv
 from openai import OpenAI
 from sqlalchemy import or_ 
+from .utils.history_tracker import track_user_action
+from .auth import get_current_user
 
 import models
 import schemas
@@ -358,5 +360,96 @@ async def get_guru_response(
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
+# User Preferences endpoints
+@app.post("/users/{user_id}/preferences/", response_model=schemas.UserPreferences)
+def create_user_preferences(
+    user_id: int,
+    preferences: schemas.UserPreferencesCreate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+):
+    if current_user.id != user_id:
+        raise HTTPException(status_code=403, detail="Not authorized")
+    
+    db_preferences = models.UserPreferences(
+        user_id=user_id,
+        **preferences.dict()
+    )
+    db.add(db_preferences)
+    db.commit()
+    db.refresh(db_preferences)
+    return db_preferences
 
+@app.get("/users/{user_id}/preferences/", response_model=schemas.UserPreferences)
+def get_user_preferences(
+    user_id: int,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+):
+    if current_user.id != user_id:
+        raise HTTPException(status_code=403, detail="Not authorized")
+    
+    preferences = db.query(models.UserPreferences).filter(
+        models.UserPreferences.user_id == user_id
+    ).first()
+    if not preferences:
+        raise HTTPException(status_code=404, detail="Preferences not found")
+    return preferences
+
+# User History endpoints
+@app.post("/users/{user_id}/history/", response_model=schemas.UserHistory)
+def create_user_history(
+    user_id: int,
+    history: schemas.UserHistoryCreate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+):
+    if current_user.id != user_id:
+        raise HTTPException(status_code=403, detail="Not authorized")
+    
+    db_history = models.UserHistory(
+        user_id=user_id,
+        **history.dict()
+    )
+    db.add(db_history)
+    db.commit()
+    db.refresh(db_history)
+    return db_history
+
+@app.get("/users/{user_id}/history/", response_model=List[schemas.UserHistory])
+def get_user_history(
+    user_id: int,
+    skip: int = 0,
+    limit: int = 100,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+):
+    if current_user.id != user_id:
+        raise HTTPException(status_code=403, detail="Not authorized")
+    
+    history = db.query(models.UserHistory).filter(
+        models.UserHistory.user_id == user_id
+    ).offset(skip).limit(limit).all()
+    return history
+
+@app.post("/readings/", response_model=schemas.Reading)
+async def create_reading(
+    reading: schemas.ReadingCreate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+):
+    db_reading = models.Reading(**reading.dict(), user_id=current_user.id)
+    db.add(db_reading)
+    db.commit()
+    db.refresh(db_reading)
+    
+    # Track the reading creation
+    await track_user_action(
+        db=db,
+        user_id=current_user.id,
+        action_type="create_reading",
+        details={"reading_id": db_reading.id}
+    )
+    
+    return db_reading
 

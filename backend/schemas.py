@@ -97,3 +97,36 @@ class AstrologicalSystem(AstrologicalSystemBase):
 
     class Config:
         from_attributes = True
+
+# User Preferences Schema
+class UserPreferencesBase(BaseModel):
+    preferred_system: str
+    notification_settings: Dict
+    theme_preferences: Dict
+
+class UserPreferencesCreate(UserPreferencesBase):
+    pass
+
+class UserPreferences(UserPreferencesBase):
+    id: int
+    user_id: int
+    created_at: datetime
+
+    class Config:
+        orm_mode = True
+
+# User History Schema
+class UserHistoryBase(BaseModel):
+    action_type: str
+    details: Dict
+
+class UserHistoryCreate(UserHistoryBase):
+    pass
+
+class UserHistory(UserHistoryBase):
+    id: int
+    user_id: int
+    created_at: datetime
+
+    class Config:
+        orm_mode = True
