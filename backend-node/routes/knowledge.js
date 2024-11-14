@@ -6,6 +6,7 @@ const Religion = require('../models/Religion');
 const Astrology = require('../models/Astrology');
 require('dotenv').config();
 
+const { authenticateToken } = require('../middleware/auth');
 // Initialize OpenAI
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY
@@ -182,6 +183,102 @@ router.get('/astrological-systems/:id', async (req, res) => {
             return res.status(404).json({ error: 'Astrological system not found' });
         }
         res.json(astrology);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+router.get('/enhanced/philosophies', authenticateToken, async (req, res) => {
+    try {
+        const philosophies = await Philosophy.find();
+        // Add enhanced content for each philosophy
+        const enhancedPhilosophies = philosophies.map(p => ({
+            ...p.toObject(),
+            enhancedContent: {
+                personalInsights: `Personal insights for ${p.name}`,
+                practicalApplications: p.practices,
+                modernInterpretations: `Modern interpretation of ${p.name}`,
+                recommendedReadings: [`Key texts about ${p.name}`]
+            }
+        }));
+        res.json(enhancedPhilosophies);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+router.get('/enhanced/religions', authenticateToken, async (req, res) => {
+    try {
+        const religions = await Religion.find();
+        const enhancedReligions = religions.map(r => ({
+            ...r.toObject(),
+            enhancedContent: {
+                personalInsights: `Personal insights for ${r.name}`,
+                modernPractices: r.practices,
+                culturalContext: `Cultural context of ${r.name}`,
+                recommendedReadings: [`Sacred texts of ${r.name}`]
+            }
+        }));
+        res.json(enhancedReligions);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+router.get('/enhanced/astrological-systems', authenticateToken, async (req, res) => {
+    try {
+        const systems = await Astrology.find();
+        const enhancedSystems = systems.map(s => ({
+            ...s.toObject(),
+            enhancedContent: {
+                personalInsights: `Personal insights for ${s.name}`,
+                practicalApplications: s.elements,
+                modernInterpretations: `Modern interpretation of ${s.name}`,
+                recommendedReadings: [`Key texts about ${s.name}`]
+            }
+        }));
+        res.json(enhancedSystems);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Enhanced search endpoint
+router.get('/enhanced/search', authenticateToken, async (req, res) => {
+    try {
+        const query = req.query.query;
+        
+        const [philosophies, religions, astrologicalSystems] = await Promise.all([
+            Philosophy.find({ $text: { $search: query } }),
+            Religion.find({ $text: { $search: query } }),
+            Astrology.find({ $text: { $search: query } })
+        ]);
+        
+        // Add enhanced content to search results
+        const enhancedResults = {
+            philosophies: philosophies.map(p => ({
+                ...p.toObject(),
+                enhancedContent: {
+                    personalInsights: `Personal insights for ${p.name}`,
+                    practicalApplications: p.practices
+                }
+            })),
+            religions: religions.map(r => ({
+                ...r.toObject(),
+                enhancedContent: {
+                    personalInsights: `Personal insights for ${r.name}`,
+                    modernPractices: r.practices
+                }
+            })),
+            astrologicalSystems: astrologicalSystems.map(s => ({
+                ...s.toObject(),
+                enhancedContent: {
+                    personalInsights: `Personal insights for ${s.name}`,
+                    practicalApplications: s.elements
+                }
+            }))
+        };
+        
+        res.json(enhancedResults);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

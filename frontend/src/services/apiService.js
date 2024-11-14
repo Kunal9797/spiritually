@@ -1,7 +1,7 @@
 import axios from 'axios';
 import authService from './authService';
 
-const API_URL = 'http://localhost:8001';
+const API_URL = 'http://localhost:5001/api';
 
 // Create axios instance with auth header
 const api = axios.create({
@@ -22,11 +22,11 @@ api.interceptors.request.use((config) => {
 
 class ApiService {
     async getUserProfile() {
-        return api.get('/users/me');
+        return api.get('/auth/profile');
     }
 
     async updateUserProfile(userData) {
-        return api.put('/users/me', userData);
+        return api.put('/auth/profile', userData);
     }
 
     async getReadings() {

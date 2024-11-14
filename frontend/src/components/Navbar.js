@@ -1,11 +1,18 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaSignInAlt } from 'react-icons/fa';
+import { FaSignInAlt, FaUser } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import authService from '../services/authService';
 
 function Navbar() {
     const navigate = useNavigate();
-    const isLoggedIn = localStorage.getItem('token');
+    const user = authService.getCurrentUser();
+    const isLoggedIn = user && user.token;
+
+    const handleLogout = () => {
+        authService.logout();
+        navigate('/login');
+    };
 
     return (
         <nav className="navbar">
@@ -30,6 +37,10 @@ function Navbar() {
                         </>
                     ) : (
                         <>
+                            <span className="me-3">
+                                <FaUser className="me-1" />
+                                {user.user.username}
+                            </span>
                             <button 
                                 className="btn btn-outline me-2" 
                                 onClick={() => navigate('/knowledge-base')}
@@ -44,10 +55,7 @@ function Navbar() {
                             </button>
                             <button 
                                 className="btn btn-primary" 
-                                onClick={() => {
-                                    localStorage.removeItem('token');
-                                    navigate('/login');
-                                }}
+                                onClick={handleLogout}
                             >
                                 Logout
                             </button>

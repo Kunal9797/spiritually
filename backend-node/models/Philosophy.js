@@ -19,7 +19,13 @@ const philosophySchema = new mongoose.Schema({
         author: String,
         period: String
     }],
-    keywords: [String]
+    keywords: [String],
+    enhancedContent: {
+        personalInsights: String,
+        practicalApplications: [String],
+        modernInterpretations: String,
+        recommendedReadings: [String]
+    }
 }, {
     timestamps: true
 });

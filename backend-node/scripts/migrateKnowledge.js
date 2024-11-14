@@ -145,7 +145,13 @@ async function migrateData() {
         await Promise.all([
             Philosophy.insertMany(data.philosophies.map(p => ({
                 ...p,
-                keywords: [...p.keyPrinciples, ...p.practices]
+                keywords: [...p.keyPrinciples, ...p.practices],
+                enhancedContent: {
+                    personalInsights: `Deep insights into ${p.name}'s practical applications in modern life.`,
+                    practicalApplications: p.practices,
+                    modernInterpretations: `Contemporary interpretation of ${p.name}'s principles.`,
+                    recommendedReadings: [`Essential readings for ${p.name}`]
+                }
             }))),
             Religion.insertMany(data.religions.map(r => ({
                 ...r,
@@ -161,7 +167,9 @@ async function migrateData() {
     } catch (error) {
         console.error('Migration error:', error);
     } finally {
-        await mongoose.disconnect();
+        await mongoose.connection.close();
+        console.log('Database connection closed');
+        process.exit();
     }
 }
 
