@@ -50,5 +50,3 @@ Thumbs.db
 .env.development.local
 .env.test.local
 .env.production.localnode_modules/
-build/
-.DS_Store

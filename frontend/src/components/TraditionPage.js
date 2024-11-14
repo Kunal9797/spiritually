@@ -29,15 +29,11 @@ function TraditionPage() {
                         throw new Error('Invalid tradition type');
                 }
                 
-                const response = await axios.get(`http://localhost:5001/api/${endpoint}`);
-                const traditions = response.data;
-                const foundTradition = traditions.find(t => t.id === parseInt(id));
+                console.log('Fetching from:', `http://localhost:5001/api/${endpoint}/${id}`);
+                const response = await axios.get(`http://localhost:5001/api/${endpoint}/${id}`);
+                console.log('Received data:', response.data);
                 
-                if (!foundTradition) {
-                    throw new Error('Tradition not found');
-                }
-                
-                setTradition(foundTradition);
+                setTradition(response.data);
                 setLoading(false);
             } catch (err) {
                 console.error('Error fetching tradition:', err);

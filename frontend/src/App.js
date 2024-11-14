@@ -9,12 +9,11 @@ import KnowledgeBase from './components/KnowledgeBase';
 import Dashboard from './components/Dashboard';
 import PrivateRoute from './components/PrivateRoute';
 import TraditionPage from './components/TraditionPage';
-import './App.css';
 import './styles/global.css';
 
 function App() {
   return (
-    <Router basename="/spiritually">
+    <Router>
         <div className="app">
             <Navbar />  {/* This ensures the header is always visible */}  
             <Routes>

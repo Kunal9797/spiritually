@@ -135,7 +135,7 @@ function KnowledgeBase() {
             <div className="row">
                 {activeTab === 'philosophy' && (
                     data.philosophies.map(philosophy => (
-                        <div key={philosophy.id} className="col-md-6 mb-4">
+                        <div key={philosophy._id} className="col-md-6 mb-4">
                             <PhilosophyCard philosophy={philosophy} />
                         </div>
                     ))
@@ -143,7 +143,7 @@ function KnowledgeBase() {
                 
                 {activeTab === 'religion' && (
                     data.religions.map(religion => (
-                        <div key={religion.id} className="col-md-6 mb-4">
+                        <div key={religion._id} className="col-md-6 mb-4">
                             <ReligionCard religion={religion} />
                         </div>
                     ))
@@ -151,7 +151,7 @@ function KnowledgeBase() {
                 
                 {activeTab === 'astrology' && (
                     data.astrologicalSystems.map(system => (
-                        <div key={system.id} className="col-md-6 mb-4">
+                        <div key={system._id} className="col-md-6 mb-4">
                             <AstrologyCard system={system} />
                         </div>
                     ))

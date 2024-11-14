@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { FaBook, FaStar, FaUserPlus, FaSignInAlt, FaArrowRight } from 'react-icons/fa';
 
 function LandingPage() {
@@ -29,11 +29,11 @@ function LandingPage() {
                             </div>
                         </div>
                         <div className="col-lg-6">
-                            <img 
-                                src="/images/nature.jpg" 
-                                alt="Spiritual Journey" 
-                                className="hero-image"
-                            />
+                        <img 
+                            src={process.env.PUBLIC_URL + '/images/nature.jpg'} 
+                            alt="Spiritual Journey" 
+                            className="hero-image"
+                        />
                         </div>
                     </div>
                 </div>
@@ -105,11 +105,11 @@ function LandingPage() {
                 <div className="container">
                     <div className="about-grid">
                         <div className="about-image-container">
-                            <img 
-                                src="/images/draupadi.jpg" 
-                                alt="About Us" 
-                                className="about-image"
-                            />
+                        <img 
+                            src={process.env.PUBLIC_URL + '/images/draupadi.jpg'} 
+                            alt="About Us" 
+                            className="about-image"
+/>
                         </div>
                         <div className="about-content">
                             <h2 className="about-title">Why Choose Us</h2>
@@ -161,10 +161,10 @@ function LandingPage() {
                         <div>
                             <h5>Quick Links</h5>
                             <ul className="footer-links">
-                                <li><a href="/quick-advice">Quick Consultation</a></li>
-                                <li><a href="/knowledge-base">Knowledge Base</a></li>
-                                <li><a href="/login">Login</a></li>
-                                <li><a href="/register">Register</a></li>
+                                <li><Link to="/quick-advice">Quick Consultation</Link></li>
+                                <li><Link to="/knowledge-base">Knowledge Base</Link></li>
+                                <li><Link to="/login">Login</Link></li>
+                                <li><Link to="/register">Register</Link></li>
                             </ul>
                         </div>
                         <div>

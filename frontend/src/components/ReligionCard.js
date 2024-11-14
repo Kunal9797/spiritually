@@ -5,7 +5,7 @@ function ReligionCard({ religion }) {
     const navigate = useNavigate();
     
     const handleClick = () => {
-        navigate(`/tradition/religion/${religion.id}`);
+        navigate(`/tradition/religion/${religion._id}`);
     };
 
     return (

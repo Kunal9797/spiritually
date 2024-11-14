@@ -5,7 +5,7 @@ function AstrologyCard({ system }) {
     const navigate = useNavigate();
     
     const handleClick = () => {
-        navigate(`/tradition/astrology/${system.id}`);
+        navigate(`/tradition/astrology/${system._id}`);
     };
 
     return (

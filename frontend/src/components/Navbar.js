@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaSignInAlt } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 function Navbar() {
     const navigate = useNavigate();
@@ -9,7 +10,7 @@ function Navbar() {
     return (
         <nav className="navbar">
             <div className="container">
-                <a className="navbar-brand" href="/">Spiritually</a>
+                <Link to="/" className="navbar-brand">Spiritually</Link>
                 <div>
                     {!isLoggedIn ? (
                         <>

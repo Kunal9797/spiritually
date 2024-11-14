@@ -5,7 +5,7 @@ function PhilosophyCard({ philosophy }) {
     const navigate = useNavigate();
     
     const handleClick = () => {
-        navigate(`/tradition/philosophy/${philosophy.id}`);
+        navigate(`/tradition/philosophy/${philosophy._id}`);
     };
     
     return (
