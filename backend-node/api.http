@@ -1,0 +1,24 @@
+### Register User
+POST http://localhost:5001/api/auth/register
+Content-Type: application/json
+
+{
+    "username": "testuser",
+    "email": "test@example.com",
+    "password": "password123",
+    "birthDetails": {
+        "date": "1990-01-01",
+        "time": "12:00",
+        "place": "New York",
+        "timezone": "America/New_York"
+    }
+}
+
+### Login User
+POST http://localhost:5001/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "test@example.com",
+    "password": "password123"
+}
