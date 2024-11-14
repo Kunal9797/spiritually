@@ -8,8 +8,8 @@ import os
 from dotenv import load_dotenv
 from openai import OpenAI
 from sqlalchemy import or_ 
-from .utils.history_tracker import track_user_action
-from .auth import get_current_user
+from utils.history_tracker import track_user_action
+from auth import get_current_user
 
 import models
 import schemas
@@ -43,22 +43,44 @@ async def read_root():
 
 @app.post("/register", response_model=schemas.User)
 async def register_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
-    db_user = db.query(models.User).filter(models.User.email == user.email).first()
-    if db_user:
-        raise HTTPException(status_code=400, detail="Email already registered")
-    
-    db_user = models.User(
-        email=user.email,
-        username=user.username,
-        hashed_password=models.User.hash_password(user.password),
-        birth_date=user.birth_date,
-        birth_time=user.birth_time,
-        location=user.location
-    )
-    db.add(db_user)
-    db.commit()
-    db.refresh(db_user)
-    return db_user
+    try:  # Add try-except block
+        # Debug logging
+        print(f"Attempting to register user: {user.email}")
+        
+        # Check if email exists
+        db_user = db.query(models.User).filter(models.User.email == user.email).first()
+        if db_user:
+            raise HTTPException(status_code=400, detail="Email already registered")
+        
+        # Check if username exists
+        db_user = db.query(models.User).filter(models.User.username == user.username).first()
+        if db_user:
+            raise HTTPException(status_code=400, detail="Username already registered")
+        
+        # Create new user
+        db_user = models.User(
+            email=user.email,
+            username=user.username,
+            hashed_password=models.User.hash_password(user.password),
+            birth_date=user.birth_date,
+            birth_time=user.birth_time,
+            location=user.location
+        )
+        
+        db.add(db_user)
+        db.commit()
+        db.refresh(db_user)
+        
+        print(f"User registered successfully: {user.email}")  # Debug log
+        return db_user
+        
+    except Exception as e:
+        print(f"Registration error: {str(e)}")  # Debug log
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail=f"Registration failed: {str(e)}"
+        )
 
 @app.post("/token", response_model=schemas.Token)
 async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):

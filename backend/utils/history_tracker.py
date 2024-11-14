@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from .. import models
+import models
 
 async def track_user_action(
     db: Session,
