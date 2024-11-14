@@ -14,7 +14,7 @@ import './styles/global.css';
 
 function App() {
   return (
-    <Router>
+    <Router basename="/spiritually">
         <div className="app">
             <Navbar />  {/* This ensures the header is always visible */}  
             <Routes>
