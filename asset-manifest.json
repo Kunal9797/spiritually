@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/spiritually/static/css/main.e460092d.css",
+    "main.js": "/spiritually/static/js/main.40cd0094.js",
+    "static/js/453.8ab44547.chunk.js": "/spiritually/static/js/453.8ab44547.chunk.js",
+    "index.html": "/spiritually/index.html",
+    "main.e460092d.css.map": "/spiritually/static/css/main.e460092d.css.map",
+    "main.40cd0094.js.map": "/spiritually/static/js/main.40cd0094.js.map",
+    "453.8ab44547.chunk.js.map": "/spiritually/static/js/453.8ab44547.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e460092d.css",
+    "static/js/main.40cd0094.js"
+  ]
+}
